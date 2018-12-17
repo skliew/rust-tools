@@ -1,0 +1,12 @@
+[package]
+name = "my-tools"
+version = "0.1.0"
+authors = ["skliew <skliew@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+serde_json = "1.0"
+
+[[bin]]
+name = "pretty-print-json"
+path = "src/pretty_print_json.rs"
