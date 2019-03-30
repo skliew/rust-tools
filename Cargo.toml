@@ -6,7 +6,15 @@ edition = "2018"
 
 [dependencies]
 serde_json = "1.0"
+hex = "0.3.2"
+aesni = "0.6.0"
+clap = "2.32.0"
+rand = "0.6"
 
 [[bin]]
 name = "pretty-print-json"
 path = "src/pretty_print_json.rs"
+
+[[bin]]
+name = "encrypt-decrypt"
+path = "src/encrypt_decrypt.rs"
