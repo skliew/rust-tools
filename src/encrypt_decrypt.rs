@@ -61,8 +61,8 @@ fn decrypt(input: &str, key: String) -> Result<String, Box<Error>> {
     Ok(output)
 }
 
-fn main() -> Result<(), &'static str> {
-    let matches =  App::new("encrypt_decrypt")
+fn main() -> Result<(), Box<dyn Error>> {
+    let app = App::new("encrypt_decrypt")
         .version("0.1")
         .arg(Arg::with_name("key")
              .short("k")
@@ -76,15 +76,21 @@ fn main() -> Result<(), &'static str> {
         .subcommand(SubCommand::with_name("decrypt")
                     .arg(Arg::with_name("INPUT")
                          .required(true)
-                         .index(1)))
-        .get_matches();
+                         .index(1)));
+    let matches = app.get_matches();
 
     let key_match = matches.value_of("key");
     let key = match key_match {
         Some(k) => String::from(k),
         None => {
-            let default_key = env::var("AES_CTR_KEY").expect("Key should be provided");
-            default_key
+            let default_key = env::var("AES_CTR_KEY");
+            match default_key {
+                Ok(key) => key,
+                Err(_e) => {
+                    println!("Key should be provided. Please run command with --help for more info.");
+                    std::process::exit(1);
+                }
+            }
         }
     };
 
