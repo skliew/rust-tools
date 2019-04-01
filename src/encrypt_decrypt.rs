@@ -112,3 +112,21 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::cell::RefCell;
+
+    #[test]
+    fn test_encrypt_decrypt() -> Result<(), Box<dyn Error>> {
+        let input = "input_string";
+        let random_bytes : [u8; 16] = random();
+        let key = hex::encode(random_bytes);
+        let key_refcell: RefCell<String> = RefCell::new(key);
+        let encrypted = encrypt(input, key_refcell.borrow().to_string())?;
+        let decrypted = decrypt(&encrypted, key_refcell.borrow().to_string())?;
+        assert_eq!(input, decrypted);
+        Ok(())
+    }
+}
