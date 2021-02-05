@@ -6,7 +6,12 @@ edition = "2018"
 
 [dependencies]
 serde_json = "1.0"
+uuid = { version = "0.8", features = ["serde", "v4"] }
 
 [[bin]]
 name = "pretty-print-json"
 path = "src/pretty_print_json.rs"
+
+[[bin]]
+name = "uuidgen"
+path = "src/uuidgen.rs"
