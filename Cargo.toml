@@ -15,3 +15,7 @@ path = "src/pretty_print_json.rs"
 [[bin]]
 name = "uuidgen"
 path = "src/uuidgen.rs"
+
+[[bin]]
+name = "compact-json"
+path = "src/compact_json.rs"
