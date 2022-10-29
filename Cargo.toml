@@ -8,6 +8,7 @@ edition = "2018"
 serde_json = "1.0"
 serde_yaml = "0.9.13"
 uuid = { version = "0.8", features = ["serde", "v4"] }
+combine = "4.6.6"
 
 [[bin]]
 name = "pretty-print-json"
@@ -24,3 +25,7 @@ path = "src/compact_json.rs"
 [[bin]]
 name = "yaml2json"
 path = "src/yaml2json.rs"
+
+[[bin]]
+name = "combine_log_parser"
+path = "src/combine_log_parser.rs"
