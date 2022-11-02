@@ -28,28 +28,42 @@ where I: RangeStream<Token = char>,
      satisfy(|_x| true)).map(|(_,y)| y)
 }
 
-fn normal_character<'a, I>() -> impl Parser<I, Output = char>
-where I: RangeStream<Token = char>,
+fn escaped_characters<'a, I>() -> impl Parser<I, Output = String> + 'a
+where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
-    satisfy(|x| x != '"' && x != '\\')
+    (escaped_character(),
+     take_while1(|x: char| x != '"' && x != '\\')
+    ).map(|(x, y): (char, &'a str)| {
+        let mut result = String::from(y);
+        result.insert(0, x);
+        result
+     })
 }
 
-fn value<'a, I>() -> impl Parser<I, Output = String>
-where I: RangeStream<Token = char, Range = &'a str>,
+fn parse_string<'a, I>() -> impl Parser<I, Output = String> + 'a
+where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
-    (char('"'),
-     many(choice((attempt(normal_character()), escaped_character()))),
-     char('"')).map(|(_, x, _): (_, Vec<char>, _)| x.into_iter().collect())
+    (
+        char('"'),
+        take_while1(|x: char| x != '"' && x != '\\'),
+        many(escaped_characters()),
+        char('"'),
+    ).map(|(_, x, y, _): (_, &str, Vec<String>, _)| {
+        let mut result = String::from(x);
+        let string2 : String = y.into_iter().collect();
+        result.push_str(&string2);
+        result
+    })
 }
 
-fn parse_kv<'a, I>() -> impl Parser<I, Output = (&'a str, String)>
-where I: RangeStream<Token = char, Range = &'a str>,
+fn parse_kv<'a, I>() -> impl Parser<I, Output = (&'a str, String)> + 'a
+where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
-    (alphanum_dash(), char('='), value()).map(|(x,_,z)| (x, z))
+    (alphanum_dash(), char('='), parse_string()).map(|(x,_,z)| (x, z))
 }
 
 fn parse_kvmap<'a, I>() -> impl Parser<I, Output = Vec<(&'a str, String)>>
-where I: RangeStream<Token = char, Range = &'a str>,
+where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
     sep_by(parse_kv(), spaces())
 }
@@ -61,13 +75,13 @@ where I: RangeStream<Token = char, Range = &'a str>,
 }
 
 fn parse_rest<'a, I>() -> impl Parser<I, Output = HashMap<&'a str, String>>
-where I: RangeStream<Token = char, Range = &'a str>
+where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
     (choice((attempt(parse_kvmap()), parse_rest_of_string()))).map(|x| HashMap::from_iter(x))
 }
 
 fn parse_log<'a, I>() -> impl Parser<I, Output = HashMap<&'a str, String>>
-where I: RangeStream<Token = char, Range = &'a str>,
+where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
     (take(20).with(take(19).skip((take(21), take_while1(|x: char| x.is_alphanumeric()), skip_many(space())))),
      alphanum_dash().skip(spaces()),
@@ -114,4 +128,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_string() -> Result<(), Box<dyn std::error::Error>> {
+        let input = "\"def\\\"abc\"";
+        let result = parse_string().easy_parse(input)?;
+        assert_eq!("def\"abc", result.0);
+        Ok(())
+    }
 }
