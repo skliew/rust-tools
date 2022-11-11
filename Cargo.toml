@@ -5,8 +5,9 @@ authors = ["skliew <skliew@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-serde_json = "1.0"
+serde_json = { version = "1.0", features = ["unbounded_depth"] }
 serde_yaml = "0.9.13"
+serde = "1.0"
 uuid = { version = "0.8", features = ["serde", "v4"] }
 combine = "4.6.6"
 
@@ -29,3 +30,7 @@ path = "src/yaml2json.rs"
 [[bin]]
 name = "combine_log_parser"
 path = "src/combine_log_parser.rs"
+
+[[bin]]
+name = "pretty-print-json-unbounded"
+path = "src/pretty_print_json_unbounded.rs"

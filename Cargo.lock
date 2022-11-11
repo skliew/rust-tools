@@ -32,9 +32,9 @@ dependencies = [
 
 [[package]]
 name = "getrandom"
-version = "0.2.2"
+version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9495705279e7140bf035dde1f6e750c162df8b625267cd52cc44e0b156732c8"
+checksum = "c05aeb6a22b8f62540c194aac980f2115af067bfe15a0734d7277a768d396b31"
 dependencies = [
  "cfg-if",
  "libc",
@@ -59,21 +59,15 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "0.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1306f3464951f30e30d12373d31c79fbd52d236e5e896fd92f96ec7babbbe60b"
-
-[[package]]
-name = "itoa"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4217ad341ebadf8d8e724e264f13e593e0648f5b3e94b3896a5df283be015ecc"
 
 [[package]]
 name = "libc"
-version = "0.2.85"
+version = "0.2.137"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ccac4b00700875e6a07c6cde370d44d32fa01c5a65cdd2fca6858c479d28bb3"
+checksum = "fc7fcc620a3bff7cdd7a365be3376c97191aeaccc2a603e600951e452615bf89"
 
 [[package]]
 name = "memchr"
@@ -86,16 +80,11 @@ name = "my-tools"
 version = "0.1.0"
 dependencies = [
  "combine",
+ "serde",
  "serde_json",
  "serde_yaml",
  "uuid",
 ]
-
-[[package]]
-name = "ryu"
-version = "0.2.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb9e9b8cde282a9fe6a42dd4681319bfb63f121b8a8ee9439c6f4107e58a46f7"
 
 [[package]]
 name = "ryu"
@@ -105,30 +94,30 @@ checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
 
 [[package]]
 name = "serde"
-version = "1.0.145"
+version = "1.0.147"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "728eb6351430bccb993660dfffc5a72f91ccc1295abaa8ce19b27ebe4f75568b"
+checksum = "d193d69bae983fc11a79df82342761dfbf28a99fc8d203dca4c3c1b590948965"
 
 [[package]]
 name = "serde_json"
-version = "1.0.33"
+version = "1.0.87"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c37ccd6be3ed1fdf419ee848f7c758eb31b054d7cd3ae3600e3bae0adf569811"
+checksum = "6ce777b7b150d76b9cf60d28b55f5847135a003f7d7350c6be7a773508ce7d45"
 dependencies = [
- "itoa 0.4.3",
- "ryu 0.2.7",
+ "itoa",
+ "ryu",
  "serde",
 ]
 
 [[package]]
 name = "serde_yaml"
-version = "0.9.13"
+version = "0.9.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8613d593412a0deb7bbd8de9d908efff5a0cb9ccd8f62c641e7b2ed2f57291d1"
+checksum = "6d232d893b10de3eb7258ff01974d6ee20663d8e833263c99409d4b13a0209da"
 dependencies = [
  "indexmap",
- "itoa 1.0.4",
- "ryu 1.0.11",
+ "itoa",
+ "ryu",
  "serde",
  "unsafe-libyaml",
 ]
@@ -151,6 +140,6 @@ dependencies = [
 
 [[package]]
 name = "wasi"
-version = "0.10.2+wasi-snapshot-preview1"
+version = "0.11.0+wasi-snapshot-preview1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd6fbd9a79829dd1ad0cc20627bf1ed606756a7f77edff7b66b7064f9cb327c6"
+checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
