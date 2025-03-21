@@ -5,7 +5,6 @@ use combine::parser::char::{space, spaces, char};
 use combine::parser::range::{take, take_while1, take_while};
 use combine::{skip_many, Parser, satisfy, sep_by};
 use combine::{RangeStream, EasyParser};
-use serde_json;
 use std::collections::HashMap;
 use std::iter::{Extend, FromIterator};
 
@@ -21,7 +20,7 @@ where I: RangeStream<Token = char, Range = &'a str>,
     take_while1(|x: char| x.is_numeric() || x == '.')
 }
 
-fn escaped_character<'a, I>() -> impl Parser<I, Output = char>
+fn escaped_character<I>() -> impl Parser<I, Output = char>
 where I: RangeStream<Token = char>,
 {
     (char('\\'),
@@ -77,7 +76,7 @@ where I: RangeStream<Token = char, Range = &'a str>,
 fn parse_rest<'a, I>() -> impl Parser<I, Output = HashMap<&'a str, String>>
 where I: RangeStream<Token = char, Range = &'a str> + 'a,
 {
-    (choice((attempt(parse_kvmap()), parse_rest_of_string()))).map(|x| HashMap::from_iter(x))
+    (choice((attempt(parse_kvmap()), parse_rest_of_string()))).map(HashMap::from_iter)
 }
 
 fn parse_log<'a, I>() -> impl Parser<I, Output = HashMap<&'a str, String>>
@@ -94,14 +93,14 @@ where I: RangeStream<Token = char, Range = &'a str> + 'a,
     })
 }
 
-fn to_json<'a>(input: HashMap<&'a str, String>) -> Result<String, String> {
+fn to_json(input: HashMap<&str, String>) -> Result<String, String> {
     match serde_json::to_string(&input) {
         Ok(result) => Ok(result),
         Err(err) => Err(format!("{}", err)),
     }
 }
 
-fn parse<'a>(input: &'a str) -> Result<String, String> {
+fn parse<>(input: &str) -> Result<String, String> {
     match parse_log().easy_parse(input) {
         Ok((result, _)) => Ok(to_json(result)?),
         Err(err) => {
@@ -116,16 +115,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for line in stdin.lines() {
         let input = line?;
         let result = parse(&input)?;
-        match writeln!(stdout, "{}", result) {
-            Err(err) => {
-                if err.kind() == std::io::ErrorKind::BrokenPipe {
-                    return Ok(());
-                } else {
-                    panic!("GG");
-                }
-            },
-            Ok(_) => (),
-        };
+        if let Err(err) = writeln!(stdout, "{}", result) {
+            if err.kind() == std::io::ErrorKind::BrokenPipe {
+                return Ok(());
+            } else {
+                panic!("GG");
+            }
+        }
     }
     Ok(())
 }

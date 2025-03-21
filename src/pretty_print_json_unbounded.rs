@@ -4,7 +4,7 @@ use serde::de;
 use std::io::Read;
 use std::error::Error;
 
-fn from_reader<'de, R, T>(read : R) -> Result<T, Box<dyn Error>>
+fn from_reader<R, T>(read : R) -> Result<T, Box<dyn Error>>
 where
 R : Read,
 T : de::DeserializeOwned
